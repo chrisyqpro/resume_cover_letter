@@ -1,7 +1,8 @@
 /*
- * Clickworthy Resume Template Library
+ * Resume Template Library
  * This file is for future-proofing in case other *.typ files are added to the library later.
  */
 
 #import "resume.template.typ": *
 #import "cover-letter.typ": *
+// #import "starter.template.typ": *

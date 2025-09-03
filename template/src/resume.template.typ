@@ -1,175 +1,240 @@
-/*
-This copy of the resume formatting template is provided in the template download in case
-you'd like to make your preferred edits to the template directly.
-
-If you'd like to use this copy instead of the package, you'll need to update the #import
-statement in your resume.typ file to reference this file directly.
-
-Have you made edits or bug fixes to this template that you feel would help out others?
-It would be fantastic if you submitted a pull request to the template repository at
-https://github.com/chaoticgoodcomputing/typst-resume-starter !
-*/
-
-/*
-Core formatting for the template document type. Establishes general document-wide formatting,
-and creates the header and footer for the resume.
-*/
+// From https://github.com/steadyfall/simple-technical-resume-template
 #let resume(
-  author: "",
+  paper: "us-letter",
+  top-margin: 0.5in,
+  bottom-margin: 0.5in,
+  left-margin: 0.5in,
+  right-margin: 0.5in,
+  font: "New Computer Modern",
+  font-size: 11pt,
+  personal-info-font-size: 10pt,
+  author-name: "",
+  author-position: center,
+  personal-info-position: center,
+  phone: "",
   location: "",
-  contacts: (),
+  email: "",
+  website: "",
+  linkedin-user-id: "",
+  github-username: "",
   body,
 ) = {
-  // Sets document metadata
-  set document(author: author, title: author)
-
-  // Document-wide formatting, including font and margins
-  set text(
-    font: "New Computer Modern",
-    size: 11pt,
-    lang: "en",
+  set document(
+    title: "Résumé | " + author-name,
+    author: author-name,
+    keywords: "cv",
+    date: none,
   )
 
   set page(
+    paper: paper,
     margin: (
-      top: 1.25cm,
-      bottom: 0cm,
-      left: 1.5cm,
-      right: 1.5cm,
+      top: top-margin,
+      bottom: bottom-margin,
+      left: left-margin,
+      right: right-margin,
     ),
   )
 
-  show link: set text(
-    fill: rgb("#0645AD"),
+  set text(
+    font: font,
+    size: font-size,
+    lang: "en",
+    ligatures: false,
   )
 
-  // Header parameters, including author and contact information.
-  show heading: it => [
-    #pad(top: 0pt, bottom: -15pt, [#smallcaps(it.body)])
-    #line(length: 100%, stroke: 1pt)
+  show heading.where(level: 1): it => block(width: 100%)[
+    #set text(font-size + 2pt, weight: "regular")
+    #smallcaps(it.body)
+    #v(-1em)
+    #line(length: 100%, stroke: stroke(thickness: 0.4pt))
+    #v(-0.2em)
   ]
 
-  // Author
-  align(center)[
-    #block(text(weight: 700, 2.5em, [#smallcaps(author)]))
-  ]
+  let contact_item(value, link-type: "", prefix: "") = {
+    if value != "" {
+      if link-type != "" {
+        underline(offset: 0.3em)[#link(link-type + value)[#(prefix + value)]]
+      } else {
+        value
+      }
+    }
+  }
 
-  // Contact
-  pad(
-    top: 0.25em,
-    align(center)[
-      #smallcaps[#contacts.join("  |  ")]
+  align(
+    author-position,
+    [
+      #upper(text(font-size + 16pt, weight: "extrabold")[#author-name])
+      #v(-2em)
     ],
   )
 
-  // Location
-  if location != "" {
-    align(center)[
-      #smallcaps[#location]
-    ]
-  }
-
-  // Main body.
-  set par(justify: true)
+  align(
+    personal-info-position,
+    text(personal-info-font-size)[
+      #{
+        let sepSpace = 0.2em
+        let items = (
+          contact_item(phone),
+          contact_item(email, link-type: "mailto:"),
+          contact_item(website, link-type: "https://"),
+          contact_item(linkedin-user-id, link-type: "https://linkedin.com/in/", prefix: "linkedin.com/in/"),
+          contact_item(github-username, link-type: "https://github.com/", prefix: "github.com/"),
+          contact_item(location),
+        )
+        items
+          .filter(x => x != none)
+          .join([
+            #show "|": sep => {
+              h(sepSpace)
+              [|]
+              h(sepSpace)
+            }
+            |
+          ])
+      }
+    ],
+  )
 
   body
 }
 
-/*
-Allows hiding or showing full resume dynamically using global variable. This can
-be helpful for creating a single document that can be rendered differently depending on
-the desired output, for cases where you'd like to simultaneously render both a full copy
-and a single-page instance of only the most important or vital information.
-*/
-#let hide(should-hide, content) = {
-  if not should-hide {
-    content
-  }
-}
+// ---
+// Custom functions
 
-/*
-Education section formatting, allowing enumeration of degrees and GPA
-*/
-#let edu(
-  institution: "",
-  date: "",
-  degrees: (),
-  gpa: "",
-  location: "",
-) = {
-  pad(
-    bottom: 10%,
-    grid(
-      columns: (auto, 1fr),
-      align(left)[
-        #strong[#institution]
-        #{
-          if gpa != "" [
-            | #emph[GPA: #gpa]
-          ]
-        }
-        \ #{
-          for degree in degrees [
-            #strong[#degree.at(0)] | #emph[#degree.at(1)] \
-          ]
-        }
-      ],
-      align(right)[
-        #emph[#date]
-        #{
-          if location != "" [
-            \ #emph[#location]
-          ]
-        }
-      ],
-    ),
+#let generic_1x2(r1c1, r1c2) = {
+  grid(
+    columns: (1fr, 1fr),
+    align(left)[#r1c1], align(right)[#r1c2],
   )
 }
 
-/*
-Skills section formatting, responsible for collapsing individual entries into
-a single list.
-*/
-#let skills(areas) = {
-  for area in areas {
-    strong[#area.at(0): ]
-    area.at(1).join(" | ")
-    linebreak()
+#let generic_2x2(cols, r1c1, r1c2, r2c1, r2c2) = {
+  // sanity checks
+  assert.eq(type(cols), array)
+
+  grid(
+    columns: cols,
+    align(left)[#r1c1 \ #r2c1],
+    align(right)[#r1c2 \ #r2c2]
+  )
+}
+
+#let custom-title(title, spacing-between: -0.5em, body) = {
+  [= #title]
+  body
+  v(spacing-between)
+}
+
+// Custom list to be used inside custom-title section.
+#let skills(body) = {
+  if body != [] {
+    set par(leading: 0.6em)
+    set list(
+      body-indent: 0.1em,
+      indent: 0em,
+      marker: [],
+    )
+    body
   }
 }
 
-/*
-Experience section formatting logic.
-*/
-#let exp(
-  role: "",
-  project: "",
-  date: "",
-  location: "",
-  summary: "",
-  details: [],
-) = {
-  pad(
-    bottom: 10%,
-    grid(
-      columns: (auto, 1fr),
-      align(left)[
-        #strong[#role] | #emph[#project]
-        #{
-          if summary != "" [
-            \ #emph[#summary]
-          ]
-        }
-      ],
-      align(right)[
-        #emph[#date]
-        #{
-          if location != "" [
-            \ #emph[#location]
-          ]
-        }
-      ],
-    ),
+// Converts datetime format into readable period.
+#let period_worked(start-date, end-date) = {
+  // sanity checks
+  assert.eq(type(start-date), datetime)
+  assert(type(end-date) == datetime or type(end-date) == str)
+
+  if type(end-date) == str and end-date == "Present" {
+    end-date = datetime.today()
+  }
+
+  return [
+    #start-date.display("[month repr:short] [year]") --
+    #if (
+      (end-date.month() == datetime.today().month()) and (end-date.year() == datetime.today().year())
+    ) [
+      Present
+    ] else [
+      #end-date.display("[month repr:short] [year]")
+    ]
+  ]
+}
+
+// Pretty self-explanatory.
+#let work-heading(title, company, location, start-date, end-date, body) = {
+  // sanity checks
+  assert.eq(type(start-date), datetime)
+  assert(type(end-date) == datetime or type(end-date) == str)
+
+  generic_2x2(
+    (1fr, 1fr),
+    [*#title*],
+    [*#period_worked(start-date, end-date)*],
+    [#company],
+    emph(location),
   )
-  details
+  v(-0.2em)
+  if body != [] {
+    v(-0.4em)
+    set par(leading: 0.6em)
+    set list(indent: 0.5em)
+    body
+  }
+}
+
+// Pretty self-explanatory.
+#let project-heading(name, info: "", stack: "", project-url: "", body) = {
+  let project_name = []
+  if project-url.len() != 0 {
+    project_name = link("https://" + project-url)[*#name*]
+  } else {
+    project_name = [*#name*]
+  }
+  generic_2x2(
+    (1fr, 1fr),
+    [*#project_name*],
+    [],
+    [#info],
+    emph(stack),
+  )
+  // if stack != "" {
+  //   [
+  //     #show "|": sep => {
+  //       h(0.3em)
+  //       [|]
+  //       h(0.3em)
+  //     }
+  //     |*#stack*
+  //   ]
+  // }
+  v(-0.2em)
+  if body != [] {
+    v(-0.4em)
+    set par(leading: 0.6em)
+    set list(indent: 0.5em)
+    body
+  }
+}
+
+// Pretty self-explanatory.
+#let education-heading(institution, location, degree, major, start-date, end-date, body) = {
+  // sanity checks
+  assert.eq(type(start-date), datetime)
+  assert(type(end-date) == datetime or type(end-date) == str)
+
+  generic_2x2(
+    (70%, 30%),
+    [*#institution*],
+    [*#location*],
+    [#degree, #major],
+    period_worked(start-date, end-date),
+  )
+  v(-0.2em)
+  if body != [] {
+    v(-0.4em)
+    set par(leading: 0.6em)
+    set list(indent: 0.5em)
+    body
+  }
 }

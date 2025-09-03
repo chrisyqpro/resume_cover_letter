@@ -1,121 +1,143 @@
-/*
-
-NOTE: (from guided-resume-starter-cgc's starter.typ)
-1. One page.
-2. Location = general. Phone = not by default. Links = working while printable.
-3. Edu section first. Degree should be exact. pa: "4.0 of 4.0, Honour...",
-4. Skill: skill-soft-language-cert.
-  - Use this section for AI keyword matching so fine-tuning for EVERY application.
-  - Put everything ordered by skill level and commented out. Match the keywords
-    from JD to enable (one line each section) and add new ones. (jobscan.io)
-  - PL: only include you can use in interview.
-  - Soft: No IDE/editor, OS, social app, office. (unless mentioned in JD or specific devel).
-  - Can link skills. Can hide section title into edu.
-5. EXP: each 3+-1 bullet points
-  - what I did, how I did it, measurement
-  - [VERB] a [NOUN] using [METHOD] for [REASON], resulting in [RESULT]
-  - Concise, boldly mention skills, trimming old exp first but cautious about gap.
-  - link, comment etc.
-6. Project (Volunteering, Charity, Leadership, Award, Hobby etc). All follow exp.
-
-*/
-// Based on
 #import "../template/src/lib.typ": *
 
+// Put your personal information here
+#let name = "Chris Qi"
+#let phone = "+1 (123) 456-7890"
+#let email = "chrisyqpro@gmail.com"
+#let github = "chrisyqpro"
+#let linkedin = "chris-yu-qi"
+#let location = "Ontario, Canada"
+#let personal-site = "chrisyqpro.com"
+
+// Since the following arguments are within the `with` block,
+// you can remove/comment any argument to fallback to the preset value and/or
+// remove it.
 #show: resume.with(
-  author: "Chris Qi",
-  location: "Wonderland, Canada",
-  contacts: (
-    // [#link("tel:123-456-7890")[123-456-7890]],
-    [#link("mailto:chrisyqpro@gmail.com")[chrisyqpro\@gmail.com]],
-    // [#link("https://example.com")[example.com]],
-    // [#link("https://github.com/chrisyqpro")[github.com/chrisyqpro]],
-    [#link("https://linkedin.com/in/c")[linkedin.com/in/c]],
-  ),
-  // footer: [#align(center)[#emph[References available on request]]]
+  // bottom-margin: 0.3in,
+  // personal-info-font-size: 10.5pt,
+  author-name: name,
+  // phone: phone,
+  email: email,
+  // website: personal-site,
+  linkedin-user-id: linkedin,
+  // github-username: github,
+  location: location,
 )
 
-= Education
-#edu(
-  institution: "University of Colombia",
-  date: "Aug 1948",
-  gpa: "3.9 of 4.0, Summa Cum Laude",
-  degrees: (
-    ("Bachelor's of Science", "Nuclear Engineering"),
-    ("Minors", "Automobile Design, Arabic"),
-    ("Focus", "Childcare, Education"),
-  ),
-)
+// Use custom-title function instead of first-level headings to customize the
+// size between two sections by specifying the `spacingBetween` argument.
+// https://typst.app/docs/reference/layout/length/
 
-= Skills
-#skills((
-  (
-    "Expertise",
-    (
-      [Theoretical Physics],
-      [Time Travel],
-      [Nuclear Material Management],
-      [Student Mentoring],
-      // [Ethics],
-      // [Hair Cair],
-      // [Jumpsuit Design],
-      // [Conflict Resolution],
-    ),
-  ),
-  (
-    "Technologies",
-    (
-      [AutoDesk CAD],
-      [Delorean OS],
-      [Windows 1],
-      // [Microsoft Word],
-      // [Car Maintenance],
-    ),
-  ),
-  (
-    "Languages",
-    (
-      [C++],
-      [C Language],
-      [MatLab],
-      [Punch Cards],
-      // [Python],
-      // [C\#]
-    ),
-  ),
-  (
-    "Certifications",
-    (
-      [MS],
-    ),
-  ),
-))
+#custom-title("Education")[
+  #education-heading(
+    "Scranton University", // institution
+    "Scranton, PA", // location
+    "Bachelor of Arts", // degree
+    "Business Administration", // major
+    datetime(year: 1992, month: 9, day: 1), // start-date
+    datetime(year: 1998, month: 4, day: 1), // end-date
+  )[
+    - Awarded "Most Determined Student" in senior year
+  ]
+  #education-heading(
+    "Scranton University", // institution
+    "Scranton, PA", // location
+    "Bachelor of Arts", // degree
+    "Business Administration", // major
+    datetime(year: 1992, month: 9, day: 1), // start-date
+    datetime(year: 1998, month: 4, day: 1), // end-date
+  )[]
+]
 
+#custom-title("Skills")[
+  #skills()[
+    - *Professional Skills:*
+      Sales Expertise,
+      Leadership,
+      Conflict Resolution,
+      Strategic Planning,
+      Negotiation
+    - *Personal Traits:*
+      Alpha Male,
+      Hardworking,
+      Jackhammer,
+      Merciless,
+      Insatiable
+    - *Specialized Talents:*
+      Karate (Black Belt),
+      Jujitsu,
+      Werewolf Hunting,
+      Table Making
+    - *Certifications:*
+      MS
+  ]
+]
 
-= Experience
-#exp(
-  role: "Theoretical Physics Consultant",
-  project: "Doc Brown's Garage",
-  date: "June 1953 - Oct 2015",
-  location: "Hill Valley, CA",
-  summary: "Specializing in development of time travel devices and student tutoring",
-  details: [
-    - Lead development of time travel devices, resulting in the ability to travel back and forth through time
-    - Managed and executed a budget of \$14 million dollars gained from an unexplained family fortune
-    - Oversaw QA testing for time travel devices, minimizing risk of maternal time-travel related incidents
-  ],
-)
+#custom-title("Experience")[
+  #work-heading(
+    "Regional Manager", // title
+    "Dunder Mifflin", // company
+    "Scranton, PA", // location
+    datetime(year: 2013, month: 5, day: 1), // start-date
+    "Present", // end-date
+  )[
+    - Led a team of 10+ employees, boosting office productivity and morale
+    - Maintained the highest sales average, outperforming competitors despite market challenges
+    - Maintained the highest sales average, outperforming competitors despite market challenges
+    - Successfully negotiated client contracts, increasing annual revenue by 20%
+  ]
+  #work-heading(
+    "Regional Manager", // title
+    "Dunder Mifflin", // company
+    "Scranton, PA", // location
+    datetime(year: 2013, month: 5, day: 1), // start-date
+    "Present", // end-date
+  )[
+    - Led a team of 10+ employees, boosting office productivity and morale
+    - Maintained the highest sales average, outperforming competitors despite market challenges
+    - Successfully negotiated client contracts, increasing annual revenue by 20%
+  ]
+  #work-heading(
+    "Regional Manager", // title
+    "Dunder Mifflin", // company
+    "Scranton, PA", // location
+    datetime(year: 2013, month: 5, day: 1), // start-date
+    "Present", // end-date
+  )[
+    - Led a team of 10+ employees, boosting office productivity and morale
+    - Maintained the highest sales average, outperforming competitors despite market challenges
+    - Successfully negotiated client contracts, increasing annual revenue by 20%
+  ]
+  #work-heading(
+    "Regional Manager", // title
+    "Dunder Mifflin", // company
+    "Scranton, PA", // location
+    datetime(year: 2013, month: 5, day: 1), // start-date
+    "Present", // end-date
+  )[
+    - Led a team of 10+ employees, boosting office productivity and morale
+    - Maintained the highest sales average, outperforming competitors despite market challenges
+  ]
+]
 
+#custom-title("Projects")[
+  #project-heading(
+    "Schrute Farms (Bed and Breakfast)", // name
+    info: "Hackthon No.1",
+    stack: "Next.js, TailwindCSS, Postgres", // stack
+    project-url: "schrutefarms.com", // project_url
+  )[
+    - Established and managed a family-run agro-tourism business offering unique activities such as table.
+    - Maintained a 4.9/5 guest satisfaction rating on travel review platforms
+  ]
+  #project-heading(
+    "Schrute Farms (Bed and Breakfast)", // name
+    // info: "Hackthon No.1",
+    // stack: "Next.js, TailwindCSS, Postgres", // stack
+    // project-url: "schrutefarms.com", // project_url
+  )[
+    - Established and managed a family-run agro-tourism business offering unique activities such as table-making workshops, beet farming tours, and hay rides
+    - Increased guest bookings by 50% through effective online marketing and guest engagement
+  ]
+]
 
-= Projects
-#exp(
-  role: link("https://www.imdb.com/title/tt0088763/")[The Delorean],
-  project: "Doc Brown's Garage",
-  date: "May 1954 - June 1985",
-  summary: "A stylish and fully-featured vehicle capable of time travel - with mixed results",
-  details: [
-    - Designed vehicle modifications allowing for time travel and *37% increased cup holder capacity*
-    - Ethically sourced materials from various international Colombian and Libyan providers
-    - Coordinated business relationships with potential clients and interested parties
-  ],
-)
