@@ -8,6 +8,7 @@
   font: "New Computer Modern",
   font-size: 11pt,
   personal-info-font-size: 10pt,
+  lang: "en",
   author-name: "",
   author-position: center,
   personal-info-position: center,
@@ -17,13 +18,14 @@
   website: "",
   linkedin-user-id: "",
   github-username: "",
+  date: datetime.today(),
   body,
 ) = {
   set document(
     title: "Résumé | " + author-name,
     author: author-name,
     keywords: "cv",
-    date: none,
+    date: date,
   )
 
   set page(
@@ -39,7 +41,7 @@
   set text(
     font: font,
     size: font-size,
-    lang: "en",
+    lang: lang,
     ligatures: false,
   )
 
