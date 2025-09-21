@@ -4,5 +4,4 @@
  */
 
 #import "resume.template.typ": *
-#import "cover-letter.template.typ": *
-// #import "starter.template.typ": *
+#import "cover_letter.template.typ": *

@@ -20,7 +20,7 @@
 
 // Letter header
 #show: cover-letter.with(
-  // bottom-margin: 0.3in,
+  font: "XCharter",
   author-name: name,
   // phone: phone,
   email: email,

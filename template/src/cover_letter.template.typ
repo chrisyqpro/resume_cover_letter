@@ -6,7 +6,7 @@
 // Use the same heading from resume
 #let cover-letter(
   paper: "us-letter",
-  top-margin: 1in,
+  top-margin: 0.5in,
   bottom-margin: 1in,
   left-margin: 1in,
   right-margin: 1in,
@@ -57,10 +57,10 @@
     ligatures: false,
   )
 
-  show heading.where(level: 1): it => block(width: 100%)[
-    #set text(font-size + 2pt, weight: "regular")
+  show heading.where(level: 2): it => block(width: 100%)[
+    #set text(font-size + 1.5pt, weight: "regular")
     #smallcaps(it.body)
-    #v(-1em)
+    #v(-0.8em)
     #line(length: 100%, stroke: stroke(thickness: 0.4pt))
     #v(-0.2em)
   ]
@@ -68,7 +68,7 @@
   let contact_item(value, link-type: "", prefix: "") = {
     if value != "" {
       if link-type != "" {
-        underline(offset: 0.3em)[#link(link-type + value)[#(prefix + value)]]
+        link(link-type + value)[#(prefix + value)]
       } else {
         value
       }
@@ -78,8 +78,8 @@
   align(
     author-position,
     [
-      #upper(text(font-size + 16pt, weight: "extrabold")[#author-name])
-      #v(-2em)
+      #smallcaps(text(font-size + 13pt, weight: "bold")[#author-name])
+      #v(-1.8em)
     ],
   )
 
@@ -100,9 +100,9 @@
           .filter(x => x != none)
           .join([
             #show "|": sep => {
-              h(sepSpace)
+              // h(sepSpace)
               [|]
-              h(sepSpace)
+              // h(sepSpace)
             }
             |
           ])
@@ -111,15 +111,15 @@
   )
 
   pad(
-    top: 1em,
-    bottom: 0.5em,
+    top: 2em,
+    bottom: 2em,
     align(left)[
       #strong()[#date.display("[month repr:long] [day padding:none], [year]")]
     ],
   )
 
   pad(
-    bottom: 1em,
+    bottom: 2em,
     align(left)[
       #strong[#contact-name] \
       #contact-institution \

@@ -45,10 +45,10 @@
     ligatures: false,
   )
 
-  show heading.where(level: 1): it => block(width: 100%)[
-    #set text(font-size + 2pt, weight: "regular")
+  show heading.where(level: 2): it => block(width: 100%)[
+    #set text(font-size + 1.5pt, weight: "regular")
     #smallcaps(it.body)
-    #v(-1em)
+    #v(-0.8em)
     #line(length: 100%, stroke: stroke(thickness: 0.4pt))
     #v(-0.2em)
   ]
@@ -56,7 +56,7 @@
   let contact_item(value, link-type: "", prefix: "") = {
     if value != "" {
       if link-type != "" {
-        underline(offset: 0.3em)[#link(link-type + value)[#(prefix + value)]]
+        link(link-type + value)[#(prefix + value)]
       } else {
         value
       }
@@ -66,8 +66,8 @@
   align(
     author-position,
     [
-      #upper(text(font-size + 16pt, weight: "extrabold")[#author-name])
-      #v(-2em)
+      #smallcaps(text(font-size + 13pt, weight: "bold")[#author-name])
+      #v(-1.8em)
     ],
   )
 
@@ -88,9 +88,9 @@
           .filter(x => x != none)
           .join([
             #show "|": sep => {
-              h(sepSpace)
+              // h(sepSpace)
               [|]
-              h(sepSpace)
+              // h(sepSpace)
             }
             |
           ])
@@ -104,13 +104,6 @@
 // ---
 // Custom functions
 
-#let generic_1x2(r1c1, r1c2) = {
-  grid(
-    columns: (1fr, 1fr),
-    align(left)[#r1c1], align(right)[#r1c2],
-  )
-}
-
 #let generic_2x2(cols, r1c1, r1c2, r2c1, r2c2) = {
   // sanity checks
   assert.eq(type(cols), array)
@@ -122,8 +115,8 @@
   )
 }
 
-#let custom-title(title, spacing-between: -0.5em, body) = {
-  [= #title]
+#let custom-title(title, spacing-between: 0em, body) = {
+  [== #title]
   body
   v(spacing-between)
 }
@@ -144,7 +137,7 @@
 // Converts datetime format into readable period.
 #let period_worked(start-date, end-date) = {
   // sanity checks
-  assert.eq(type(start-date), datetime)
+  assert(start-date == none or type(start-date) == datetime)
   assert(type(end-date) == datetime or type(end-date) == str)
 
   if type(end-date) == str and end-date == "Present" {
@@ -152,7 +145,9 @@
   }
 
   return [
-    #start-date.display("[month repr:short] [year]") --
+    #if (start-date != none) [
+      #start-date.display("[month repr:short] [year]") --
+    ]
     #if (
       (end-date.month() == datetime.today().month()) and (end-date.year() == datetime.today().year())
     ) [
@@ -189,27 +184,17 @@
 #let project-heading(name, info: "", stack: "", project-url: "", body) = {
   let project_name = []
   if project-url.len() != 0 {
-    project_name = link("https://" + project-url)[*#name*]
+    project_name = link("https://" + project-url)[#name]
   } else {
-    project_name = [*#name*]
+    project_name = [#name]
   }
   generic_2x2(
     (1fr, 1fr),
     [*#project_name*],
-    [],
-    [#info],
     emph(stack),
+    [#info],
+    [],
   )
-  // if stack != "" {
-  //   [
-  //     #show "|": sep => {
-  //       h(0.3em)
-  //       [|]
-  //       h(0.3em)
-  //     }
-  //     |*#stack*
-  //   ]
-  // }
   v(-0.2em)
   if body != [] {
     v(-0.4em)
@@ -220,17 +205,20 @@
 }
 
 // Pretty self-explanatory.
-#let education-heading(institution, location, degree, major, start-date, end-date, body) = {
+#let education-heading(institution, location, degree, major, start-date, end-date, gpa: none, body) = {
   // sanity checks
   assert.eq(type(start-date), datetime)
   assert(type(end-date) == datetime or type(end-date) == str)
 
+  if gpa != none {
+    gpa = " - GPA: " + gpa + "/4.0"
+  }
   generic_2x2(
     (70%, 30%),
     [*#institution*],
-    [*#location*],
-    [#degree, #major],
-    period_worked(start-date, end-date),
+    [*#period_worked(none, end-date)*],
+    [#degree, #major#gpa],
+    emph(location),
   )
   v(-0.2em)
   if body != [] {

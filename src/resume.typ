@@ -13,6 +13,7 @@
 // you can remove/comment any argument to fallback to the preset value and/or
 // remove it.
 #show: resume.with(
+  font: "XCharter",
   // bottom-margin: 0.3in,
   // personal-info-font-size: 10.5pt,
   author-name: name,
@@ -36,9 +37,8 @@
     "Business Administration", // major
     datetime(year: 1992, month: 9, day: 1), // start-date
     datetime(year: 1998, month: 4, day: 1), // end-date
-  )[
-    - Awarded "Most Determined Student" in senior year
-  ]
+    gpa: "4.0",
+  )[]
   #education-heading(
     "Scranton University", // institution
     "Scranton, PA", // location
