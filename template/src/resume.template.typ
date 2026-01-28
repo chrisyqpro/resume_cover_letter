@@ -215,9 +215,9 @@
   }
   generic_2x2(
     (70%, 30%),
-    [*#institution*],
-    [*#period_worked(none, end-date)*],
-    [#degree, #major#gpa],
+    [*#degree, #major*],
+    [*#period_worked(start-date, end-date)*],
+    [#institution#gpa],
     emph(location),
   )
   v(-0.2em)
