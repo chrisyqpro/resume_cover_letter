@@ -328,3 +328,5 @@ TSWLatexianTemp*
 # local version that shouldn't be shared
 src/local/*
 output
+
+.DS_Store
