@@ -4,6 +4,9 @@ indent_style = space
 max_line_length = 100
 tab_width = 8
 
+[*.typ]
+max_line_length = 80
+
 [*.py]
 indent_size = 4
 
